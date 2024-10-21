@@ -1,41 +1,27 @@
 <template>
-  <div :class="cn('grid gap-2', $attrs.class ?? '')">
-    <Popover>
-      <PopoverTrigger as-child>
-        <Button
-          id="date"
-          :variant="'outline'"
-          :class="cn(
-            'border-dashed h-8',
-            !isSelected && 'font-medium',
-          )"
-        >
-          <CalendarIcon class="mr-2 h-4 w-4" />
-
-          {{ title }}
-
-          <template v-if="label">
-            <Separator orientation="vertical" class="mx-2 h-4" />
-            <Badge variant="secondary" class="rounded-sm px-1 font-normal">{{ label }}</Badge>
-          </template>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent class="w-auto p-0" align="start">
-        <RangeCalendar locale="sk" v-model="date" initial-focus :number-of-months="2" />
-
-        <div v-if="isSelected" class="px-4 pb-2">
-          <Button @click="clear" class="w-full" variant="ghost">Clear</Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  </div>
+  <Popover>
+    <PopoverTrigger as-child>
+      <Button
+        variant="outline"
+        :class="cn(
+          'w-full justify-start text-left font-normal',
+          !isSelected && 'text-muted-foreground',
+          $attrs.class || ''
+        )"
+      >
+        <CalendarIcon class="mr-2 h-4 w-4" />
+        {{ label || "Pick a date" }}
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent class="w-auto p-0">
+      <RangeCalendar locale="sk" v-model="date" initial-focus :number-of-months="2" />
+    </PopoverContent>
+  </Popover>
 </template>
 
 <script setup lang="ts">
 import { Popover, PopoverTrigger, PopoverContent } from '@/Components/Popover'
-import { Separator } from '@/Components/Separator'
 import { RangeCalendar } from "@/Components/RangeCalendar";
-import { Badge } from '@/Components/Badge'
 import { Button } from "@/Components/Button";
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { computed, type Ref, ref, watch } from 'vue'
@@ -50,12 +36,11 @@ import type { DateRange } from 'radix-vue'
 const emit = defineEmits(['update:from', 'update:until'])
 
 const props = defineProps<{
-  title: string
   from?: string
   until?: string
 }>()
 
-const df = new DateFormatter('sk-SK', { // TODO: Locale Support
+const df = new DateFormatter('sk-SK', {
   dateStyle: 'medium',
 })
 

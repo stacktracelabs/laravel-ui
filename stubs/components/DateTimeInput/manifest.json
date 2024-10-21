@@ -1,0 +1,8 @@
+{
+    "dependencies": [
+        "Button",
+        "Calendar",
+        "Popover",
+        "VCalendar"
+    ]
+}
